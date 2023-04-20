@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const teste = () => {
     customerApi.get("/findAllCustomers").then((results) => {
-      console.log(results.data[0].first_name);
+      console.log(results.data);
     });
   };
   return (
