@@ -1,11 +1,18 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
+import Head from "next/head";
+import Image from "next/image";
 
-const inter = Inter({ subsets: ['latin'] })
+import { Inter } from "next/font/google";
+import styles from "@/styles/Home.module.css";
+import { customerApi } from "@/services/api";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const teste = () => {
+    customerApi.get("/findAllCustomers").then((results) => {
+      console.log(results.data[0].first_name);
+    });
+  };
   return (
     <>
       <Head>
@@ -15,9 +22,10 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
+        <button onClick={teste}>BOTAOZINHO</button>
         <div className={styles.description}>
           <p>
-            Get started by editing&nbsp;
+            GABRIEL PIRES&nbsp;
             <code className={styles.code}>src/pages/index.js</code>
           </p>
           <div>
@@ -26,7 +34,7 @@ export default function Home() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              By{' '}
+              By{" "}
               <Image
                 src="/vercel.svg"
                 alt="Vercel Logo"
@@ -57,8 +65,8 @@ export default function Home() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <h2 className={inter.className}>
-              Docs <span>-&gt;</span>
+            <h2 className={inter.className} onClick={teste}>
+              BLABLABLA <span>-&gt;</span>
             </h2>
             <p className={inter.className}>
               Find in-depth information about Next.js features and&nbsp;API.
@@ -110,5 +118,5 @@ export default function Home() {
         </div>
       </main>
     </>
-  )
+  );
 }
