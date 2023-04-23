@@ -22,7 +22,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.main}>
-        <button onClick={teste}>BOTAOZINHO</button>
+        <button onClick={teste}>BOTAOZAO</button>
         <div className={styles.description}>
           <p>
             GABRIEL PIRES&nbsp;
