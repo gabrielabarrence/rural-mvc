@@ -1,11 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 
 // layout for page
 
 import Auth from "layouts/Auth.js";
+import { customerApi } from "@/services/api";
 
 export default function Login() {
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+
+  const sendData = () => {
+    customerApi
+      .post("/loginCustomer", {
+        email: email,
+        password: password,
+      })
+      .then((response) => {
+        window.alert(response.data);
+      });
+  };
+
   return (
     <>
       <div className="container mx-auto px-4 h-full">
@@ -18,28 +33,9 @@ export default function Login() {
                     Sign in with
                   </h6>
                 </div>
-                <div className="btn-wrapper text-center">
-                  <button
-                    className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-2 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
-                    type="button"
-                  >
-                    <img alt="..." className="w-5 mr-1" src="/img/github.svg" />
-                    Github
-                  </button>
-                  <button
-                    className="bg-white active:bg-blueGray-50 text-blueGray-700 font-normal px-4 py-2 rounded outline-none focus:outline-none mr-1 mb-1 uppercase shadow hover:shadow-md inline-flex items-center font-bold text-xs ease-linear transition-all duration-150"
-                    type="button"
-                  >
-                    <img alt="..." className="w-5 mr-1" src="/img/google.svg" />
-                    Google
-                  </button>
-                </div>
                 <hr className="mt-6 border-b-1 border-blueGray-300" />
               </div>
               <div className="flex-auto px-4 lg:px-10 py-10 pt-0">
-                <div className="text-blueGray-400 text-center mb-3 font-bold">
-                  <small>Or sign in with credentials</small>
-                </div>
                 <form>
                   <div className="relative w-full mb-3">
                     <label
@@ -52,6 +48,9 @@ export default function Login() {
                       type="email"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Email"
+                      onChange={(value) => {
+                        setEmail(value.target.value);
+                      }}
                     />
                   </div>
 
@@ -66,6 +65,9 @@ export default function Login() {
                       type="password"
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
                       placeholder="Password"
+                      onChange={(value) => {
+                        setPassword(value.target.value);
+                      }}
                     />
                   </div>
                   <div>
@@ -85,8 +87,9 @@ export default function Login() {
                     <button
                       className="bg-blueGray-800 text-white active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 w-full ease-linear transition-all duration-150"
                       type="button"
+                      onClick={sendData}
                     >
-                      Sign In
+                      Entrar
                     </button>
                   </div>
                 </form>
