@@ -14,7 +14,7 @@ export default function Register() {
   const [password, setPassword] = useState();
   const [privacyPolicyCheck, setPrivacyPolicyCheck] = useState();
 
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const sendData = () => {
     customerApi
