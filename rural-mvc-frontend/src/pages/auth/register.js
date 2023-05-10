@@ -3,8 +3,8 @@ import React, { useState } from "react";
 // layout for page
 
 import Auth from "layouts/Auth.js";
-import { customerApi } from "@/services/api";
-import { useNavigate } from "react-router-dom";
+import { customerApi, producerApi } from "@/services/api";
+import { useRouter } from "next/router";
 
 export default function Register() {
   const [name, setName] = useState();
@@ -12,23 +12,38 @@ export default function Register() {
   const [email, setEmail] = useState();
   const [phone, setPhone] = useState();
   const [password, setPassword] = useState();
-  const [privacyPolicyCheck, setPrivacyPolicyCheck] = useState();
+  const [loginType, setLoginType] = useState("customer");
 
-  // const navigate = useNavigate();
+  const navigation = useRouter();
 
   const sendData = () => {
-    customerApi
-      .post("/createCustomer", {
-        first_name: name,
-        last_name: lastName,
-        email: email,
-        phone: phone,
-        password: password,
-      })
-      .then((response) => {
-        window.alert(response.data);
-        navigate("/auth/login");
-      });
+    if (loginType === "customer") {
+      customerApi
+        .post("/createCustomer", {
+          first_name: name,
+          last_name: lastName,
+          email: email,
+          phone: phone,
+          password: password,
+        })
+        .then((response) => {
+          window.alert(response.data);
+          navigation.push("/auth/login");
+        });
+    } else if (loginType === "producer") {
+      producerApi
+        .post("/createProducer", {
+          first_name: name,
+          last_name: lastName,
+          email: email,
+          phone: phone,
+          password: password,
+        })
+        .then((response) => {
+          window.alert(response.data);
+          navigation.push("/auth/login");
+        });
+    }
   };
 
   return (
@@ -101,7 +116,7 @@ export default function Register() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="grid-password"
                     >
-                      Phone
+                      Celular
                     </label>
                     <input
                       className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
@@ -117,7 +132,7 @@ export default function Register() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="grid-password"
                     >
-                      Password
+                      Senha
                     </label>
                     <input
                       type="password"
@@ -130,22 +145,24 @@ export default function Register() {
                   </div>
 
                   <div>
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        id="customCheckLogin"
-                        type="checkbox"
-                        className="form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
-                      />
-                      <span className="ml-2 text-sm font-semibold text-blueGray-600">
-                        I agree with the{" "}
-                        <a
-                          href="#pablo"
-                          className="text-lightBlue-500"
-                          onClick={(e) => e.preventDefault()}
-                        >
-                          Privacy Policy
-                        </a>
-                      </span>
+                    <label
+                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      htmlFor="grid-password"
+                    >
+                      Tipo de usuário
+                    </label>
+                    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                      <select
+                        name="type"
+                        id="loginType"
+                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                        onChange={(value) => {
+                          setLoginType(value.target.value);
+                        }}
+                      >
+                        <option value="customer">Cliente</option>
+                        <option value="producer">Produtor</option>
+                      </select>
                     </label>
                   </div>
 

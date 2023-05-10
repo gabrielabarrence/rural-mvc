@@ -18,12 +18,12 @@ const findAllCustomers = async (req, res) => {
 //controller to create users
 const createCustomer = async (req, res) => {
   const new_customer = req.body;
-
+  new_customer.is_active = true;
   const new_pass = new_customer.password;
   new_customer.password = await hashPass.encryptPassword(new_pass);
 
   await customerModel
-    .create(new_customer, (new_customer.is_active = true), {
+    .create(new_customer, {
       attributes: ["first_name", "last_name", "email", "password"],
     })
     .then(() => {

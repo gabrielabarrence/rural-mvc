@@ -3,7 +3,7 @@ const productModel = require("../models/product.model");
 //controller to find products
 const findAllProducts = async (req, res) => {
   await productModel
-    .findAll({ attributes: ["name", "sale_price", "quantity"] })
+    .findAll()
     .then((results) => {
       console.log(results);
       res.status(200).send(results);
@@ -17,6 +17,8 @@ const findAllProducts = async (req, res) => {
 //controller to create products
 const createProduct = async (req, res) => {
   const new_product = req.body;
+  new_product.in_stock = true;
+  new_product.is_reserved = false;
 
   await productModel
     .create(new_product)
@@ -33,7 +35,7 @@ const createProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   const id_product = req.params.id;
   await productModel
-    .delete(id_product)
+    .destroy({ where: { id_product: id_product } })
     .then(() => {
       res.status(200).send("Produto deletado com sucesso!");
     })

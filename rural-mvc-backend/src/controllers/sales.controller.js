@@ -33,7 +33,7 @@ const createSale = async (req, res) => {
 const deleteSale = async (req, res) => {
   const id_sale = req.params.id;
   await saleModel
-    .delete(id_sale)
+    .destroy({ where: { id_sale: id_sale } })
     .then(() => {
       res.status(200).send("Venda deletada com sucesso!");
     })

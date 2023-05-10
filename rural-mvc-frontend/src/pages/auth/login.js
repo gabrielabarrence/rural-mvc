@@ -4,21 +4,38 @@ import Link from "next/link";
 // layout for page
 
 import Auth from "layouts/Auth.js";
-import { customerApi } from "@/services/api";
+import { customerApi, producerApi } from "@/services/api";
+import { useRouter } from "next/router";
 
 export default function Login() {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [loginType, setLoginType] = useState("customer");
+
+  const navigation = useRouter();
 
   const sendData = () => {
-    customerApi
-      .post("/loginCustomer", {
-        email: email,
-        password: password,
-      })
-      .then((response) => {
-        window.alert(response.data);
-      });
+    if (loginType === "customer") {
+      customerApi
+        .post("/loginCustomer", {
+          email: email,
+          password: password,
+        })
+        .then((response) => {
+          window.alert(response.data);
+          navigation.push("/landing");
+        });
+    } else if (loginType === "producer") {
+      producerApi
+        .post("/loginProducer", {
+          email: email,
+          password: password,
+        })
+        .then((response) => {
+          window.alert(response.data);
+          navigation.push("/admin/dashboard");
+        });
+    }
   };
 
   return (
@@ -59,7 +76,7 @@ export default function Login() {
                       className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
                       htmlFor="grid-password"
                     >
-                      Password
+                      Senha
                     </label>
                     <input
                       type="password"
@@ -70,16 +87,26 @@ export default function Login() {
                       }}
                     />
                   </div>
+
                   <div>
-                    <label className="inline-flex items-center cursor-pointer">
-                      <input
-                        id="customCheckLogin"
-                        type="checkbox"
-                        className="form-checkbox border-0 rounded text-blueGray-700 ml-1 w-5 h-5 ease-linear transition-all duration-150"
-                      />
-                      <span className="ml-2 text-sm font-semibold text-blueGray-600">
-                        Remember me
-                      </span>
+                    <label
+                      className="block uppercase text-blueGray-600 text-xs font-bold mb-2"
+                      htmlFor="grid-password"
+                    >
+                      Tipo de usuário
+                    </label>
+                    <label className="block uppercase text-blueGray-600 text-xs font-bold mb-2">
+                      <select
+                        name="type"
+                        id="loginType"
+                        className="border-0 px-3 py-3 placeholder-blueGray-300 text-blueGray-600 bg-white rounded text-sm shadow focus:outline-none focus:ring w-full ease-linear transition-all duration-150"
+                        onChange={(value) => {
+                          setLoginType(value.target.value);
+                        }}
+                      >
+                        <option value="customer">Cliente</option>
+                        <option value="producer">Produtor</option>ß
+                      </select>
                     </label>
                   </div>
 

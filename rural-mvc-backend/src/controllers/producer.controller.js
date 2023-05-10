@@ -18,7 +18,7 @@ const findAllProducers = async (req, res) => {
 //controller to create users
 const createProducer = async (req, res) => {
   const new_producer = req.body;
-
+  new_producer.is_active = true;
   const new_pass = new_producer.password;
   new_producer.password = await hashPass.encryptPassword(new_pass);
 
@@ -54,7 +54,7 @@ const loginProducer = async (req, res) => {
 const deleteProducer = async (req, res) => {
   const id_producer = req.params.id;
   await producerModel
-    .delete(id_producer)
+    .destroy({ where: { id_producer: id_producer } })
     .then(() => {
       console.log("Usuário deletado com sucesso!");
       res.status(200).send("Usuário deletado com sucesso!");

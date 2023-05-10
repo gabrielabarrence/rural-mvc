@@ -33,7 +33,7 @@ const createBaseUnit = async (req, res) => {
 const deleteBaseUnit = async (req, res) => {
   const id_baseUnit = req.params.id;
   await baseUnitModel
-    .delete(id_baseUnit)
+    .destroy({ where: { id_baseUnit: id_baseUnit } })
     .then(() => {
       res.status(200).send("Unidade básica deletada com sucesso!");
     })

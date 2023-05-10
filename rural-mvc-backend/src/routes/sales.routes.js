@@ -10,5 +10,5 @@ router.get("/findSaleById/:id", salesController.findSaleById);
 // Update a sales with id
 router.put("/updateSale", salesController.updateSale);
 // Delete a sales with id
-router.delete("deleteSale/:id", salesController.deleteSale);
+router.delete("/deleteSale/:id", salesController.deleteSale);
 module.exports = router;

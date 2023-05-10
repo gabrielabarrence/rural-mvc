@@ -10,5 +10,5 @@ router.get("/findBaseUnitById/:id", baseunitController.findBaseUnitById);
 // Update a baseUnit with id
 router.put("/updateBaseUnit", baseunitController.updateBaseUnit);
 // Delete a baseUnit with id
-router.delete("deleteBaseUnit/:id", baseunitController.deleteBaseUnit);
+router.delete("/deleteBaseUnit/:id", baseunitController.deleteBaseUnit);
 module.exports = router;
