@@ -26,9 +26,9 @@ export default function Footer() {
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap text-center lg:text-left">
             <div className="w-full lg:w-6/12 px-4">
-              <h4 className="text-3xl font-semibold">Let's keep in touch!</h4>
+              <h4 className="text-3xl font-semibold">Conecte-se conosco!</h4>
               <h5 className="text-lg mt-0 mb-2 text-blueGray-600">
-                Find us on any of these platforms, we respond 1-2 business days.
+                Respondemos em até dois dias úteis.
               </h5>
               <div className="mt-6 lg:mb-0 mb-6">
                 <button
@@ -61,7 +61,7 @@ export default function Footer() {
               <div className="flex flex-wrap items-top mb-6">
                 <div className="w-full lg:w-4/12 px-4 ml-auto">
                   <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2">
-                    Useful Links
+                    Links úteis
                   </span>
                   <ul className="list-unstyled">
                     <li>
@@ -69,7 +69,7 @@ export default function Footer() {
                         className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
                         href="https://www.creative-tim.com/presentation?ref=nnjs-footer"
                       >
-                        About Us
+                        Sobre nós
                       </a>
                     </li>
                     <li>
@@ -80,27 +80,27 @@ export default function Footer() {
                         Blog
                       </a>
                     </li>
-                    <li>
+                    {/* <li>
                       <a
                         className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
                         href="https://www.github.com/creativetimofficial?ref=nnjs-footer"
                       >
                         Github
                       </a>
-                    </li>
+                    </li> */}
                     <li>
                       <a
                         className="text-blueGray-600 hover:text-blueGray-800 font-semibold block pb-2 text-sm"
                         href="https://www.creative-tim.com/bootstrap-themes/free?ref=nnjs-footer"
                       >
-                        Free Products
+                        Cupons de Desconto
                       </a>
                     </li>
                   </ul>
                 </div>
                 <div className="w-full lg:w-4/12 px-4">
                   <span className="block uppercase text-blueGray-500 text-sm font-semibold mb-2">
-                    Other Resources
+                    Saiba mais
                   </span>
                   <ul className="list-unstyled">
                     <li>
