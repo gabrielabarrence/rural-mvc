@@ -1,12 +1,38 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import Link from "next/link";
 
 // components
 
 import Navbar from "components/Navbars/AuthNavbar.js";
 import Footer from "components/Footers/Footer.js";
+import { stockApi, productApi } from "../services/api";
+import { data } from "autoprefixer";
 
 export default function Landing() {
+  const manageStock = (numberId) => {
+    stockApi.post(`/manageStock/${numberId}`);
+  };
+
+  const [productData, setProductData] = useState();
+  const [inStock, setInStock] = useState();
+
+  //retake findAllProducts
+  useEffect(() => {
+    const productFunction = async () => {
+      await productApi.get("/findAllProducts").then((response) => {
+        setProductData(response.data);
+        console.log(response.data[0]);
+        console.log(response.data[0].stock.in_stock);
+        if (response.data[0].stock.in_stock === true) {
+          setInStock(true);
+        } else {
+          setInStock(false);
+        }
+      });
+    };
+    productFunction();
+  }, []);
+
   return (
     <>
       <Navbar transparent />
@@ -88,12 +114,27 @@ export default function Landing() {
                     <p className="text-md font-light mt-2 text-white">
                       R$ 08,00 / litro
                     </p>
-                    <button
-                      className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
-                      type="button"
-                    >
-                      Reservar
-                    </button>
+                    {inStock === true ? (
+                      <button
+                        className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                        onClick={() => {
+                          manageStock(1);
+                        }}
+                      >
+                        Reservar
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                        onClick={() => {
+                          window.alert("Enviamos uma notificação por email!");
+                        }}
+                      >
+                        Enviar Notificaçōes
+                      </button>
+                    )}
                   </blockquote>
                 </div>
               </div>
@@ -121,12 +162,27 @@ export default function Landing() {
                     <p className="text-md font-light mt-2 text-white">
                       R$ 09,00 / kg
                     </p>
-                    <button
-                      className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
-                      type="button"
-                    >
-                      Reservar
-                    </button>
+                    {inStock === true ? (
+                      <button
+                        className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                        onClick={() => {
+                          manageStock(2);
+                        }}
+                      >
+                        Reservar
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                        onClick={() => {
+                          window.alert("Enviamos uma notificação por email!");
+                        }}
+                      >
+                        Enviar Notificaçōes
+                      </button>
+                    )}
                   </blockquote>
                 </div>
               </div>
@@ -154,12 +210,27 @@ export default function Landing() {
                     <p className="text-md font-light mt-2 text-white">
                       R$ 12,00/ kg
                     </p>
-                    <button
-                      className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
-                      type="button"
-                    >
-                      Reservar
-                    </button>
+                    {inStock === true ? (
+                      <button
+                        className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                        onClick={() => {
+                          manageStock(3);
+                        }}
+                      >
+                        Reservar
+                      </button>
+                    ) : (
+                      <button
+                        className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
+                        type="button"
+                        onClick={() => {
+                          window.alert("Enviamos uma notificação por email!");
+                        }}
+                      >
+                        Enviar Notificaçōes
+                      </button>
+                    )}
                   </blockquote>
                 </div>
               </div>

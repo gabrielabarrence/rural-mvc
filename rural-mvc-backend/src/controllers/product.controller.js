@@ -1,9 +1,10 @@
 const productModel = require("../models/product.model");
+const stockModel = require("../models/stock.model");
 
 //controller to find products
 const findAllProducts = async (req, res) => {
   await productModel
-    .findAll()
+    .findAll({ include: stockModel })
     .then((results) => {
       console.log(results);
       res.status(200).send(results);
@@ -14,15 +15,26 @@ const findAllProducts = async (req, res) => {
     });
 };
 
-//controller to create products
+//controller to create products and stock
 const createProduct = async (req, res) => {
   const new_product = req.body;
-  new_product.in_stock = true;
-  new_product.is_reserved = false;
 
-  await productModel
-    .create(new_product)
-    .then(() => {
+  const new_stock = { quantity: new_product.quantity };
+  new_stock.in_stock = true;
+  new_stock.quantity_reserved = 0;
+
+  await stockModel
+    .create(new_stock)
+    .then(async (response) => {
+      new_product.id_stock = response.dataValues.id_stock;
+      await productModel
+        .create(new_product)
+        .then(() => {
+          console.log("Produto criado com sucesso!");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
       res.status(200).send("Produto criado com sucesso!");
     })
     .catch((error) => {
@@ -49,7 +61,7 @@ const deleteProduct = async (req, res) => {
 const findProductById = async (req, res) => {
   const id_product = req.params.id;
   await productModel
-    .findByPk(id_product, { attributes: ["name", "sale_price", "quantity"] })
+    .findByPk(id_product, { attributes: ["name", "sale_price"] })
     .then((results) => {
       console.log(results);
       res.status(200).send(results);

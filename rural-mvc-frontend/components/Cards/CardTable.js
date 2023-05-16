@@ -105,7 +105,7 @@ export default function CardTable({ color }) {
                       : "bg-blueGray-600 text-blueGray-200 border-blueGray-500")
                   }
                 >
-                  Reservado?
+                  Reservados
                 </th>
                 <th
                   className={
@@ -129,7 +129,7 @@ export default function CardTable({ color }) {
                         R$ {data.sale_price},00
                       </td>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                        {data.quantity}
+                        {data.stock.quantity}
                       </td>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
                         {data.id_baseunit === 1
@@ -141,10 +141,10 @@ export default function CardTable({ color }) {
                           : null}
                       </td>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                        {data.in_stock ? "Sim" : "Não"}
+                        {data.stock.in_stock ? "Sim" : "Não"}
                       </td>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4">
-                        {data.is_reserved ? "Sim" : "Não"}
+                        {data.stock.quantity_reserved} / {data.stock.quantity}
                       </td>
                       <td className="border-t-0 px-6 align-middle border-l-0 border-r-0 text-xs whitespace-nowrap p-4 text-right">
                         <TableDropdown />
