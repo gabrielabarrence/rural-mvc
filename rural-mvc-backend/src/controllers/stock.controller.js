@@ -20,33 +20,63 @@ const createStock = async (req, res) => {
     });
 };
 
+let transporter = nodemailer.createTransport({
+  host: "smtp.ethereal.email",
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: "taya.lueilwitz48@ethereal.email", // generated ethereal user
+    pass: "zGaDvWwrrHceDW6JPH", // generated ethereal password
+  },
+});
+
 //controller to increment reserved products
 const manageStock = async (req, res) => {
   const id_product = req.params.id;
   await productModel
     .findByPk(id_product, { include: stockModel })
     .then(async (results) => {
-      if (results.stock.quantity_reserved < results.stock.quantity) {
-        await stockModel
-          .update(
-            { quantity_reserved: sequelize.literal("quantity_reserved+1") },
-            { where: { id_stock: results.stock.id_stock } }
-          )
-          .then(async () => {
-            await productModel
-              .findByPk(id_product, { include: stockModel })
-              .then(async (results) => {
-                if (
-                  results.stock.quantity_reserved === results.stock.quantity
-                ) {
-                  await stockModel.update(
-                    { in_stock: false },
-                    { where: { id_stock: results.stock.id_stock } }
-                  );
-                }
-              });
-          });
-      }
+      await stockModel
+        .update(
+          {
+            quantity_reserved: req.body.quantity_reserved
+              ? req.body.quantity_reserved
+              : sequelize.literal("quantity_reserved+1"),
+          },
+          { where: { id_stock: results.stock.id_stock } }
+        )
+        .then(async () => {
+          await productModel
+            .findByPk(id_product, { include: stockModel })
+            .then(async (results) => {
+              if (req.body.quantity_reserved) {
+                let info = await transporter
+                  .sendMail({
+                    from: "rural@example.email", // sender address
+                    to: "taya.lueilwitz48@ethereal.email", // list of receivers
+                    subject: "Novo Produto no Estoque!", // Subject line
+                    text: "Olá, temos novos produtos na loja Hortifruti do Álvaro! Acesse a loja para conferir.", // plain text body
+                    html: "<b>Olá, temos novos produtos na loja Hortifruti do Álvaro! </b> Acesse a loja para conferir.</b>", // html body
+                  })
+                  .then(() => {
+                    console.log("Deu certo");
+                  })
+                  .catch((error) => {});
+              }
+
+              if (results.stock.quantity_reserved >= results.stock.quantity) {
+                await stockModel.update(
+                  { in_stock: false },
+                  { where: { id_stock: results.stock.id_stock } }
+                );
+              } else {
+                await stockModel.update(
+                  { in_stock: true },
+                  { where: { id_stock: results.stock.id_stock } }
+                );
+              }
+            });
+        });
       res.status(200).send(results);
     })
     .catch((error) => {
@@ -62,20 +92,12 @@ const sendEmail = async (req, res) => {
   //   let testAccount = await nodemailer.createTestAccount();
 
   // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: "kane27@ethereal.email", // generated ethereal user
-      pass: "Qvmmsw1sgfTywdTSCx", // generated ethereal password
-    },
-  });
+
   console.log(req.body.email);
   // send mail with defined transport object
   let info = await transporter
     .sendMail({
-      from: "kane27@ethereal.email", // sender address
+      from: "rural@example.email", // sender address
       to: req.body.email, // list of receivers
       subject: "Novo Produto no Estoque!", // Subject line
       text: "Olá, temos novos produtos na loja Hortifruti do Álvaro! Acesse a loja para conferir.", // plain text body
