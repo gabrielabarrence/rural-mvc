@@ -13,34 +13,24 @@ export default function Landing() {
   };
 
   const [productData, setProductData] = useState();
-  const [inStock, setInStock] = useState();
+  const [inStock, setInStock] = useState([]);
 
   //retake findAllProducts
   useEffect(() => {
     const productFunction = async () => {
       await productApi.get("/findAllProducts").then((response) => {
         setProductData(response.data);
-        console.log(response.data[0]);
-        console.log(response.data[0].stock.in_stock);
-        if (response.data[0].stock.in_stock === true) {
-          setInStock(true);
-        } else {
-          setInStock(false);
-        }
+        console.log(response.data);
+
+        const productsInStock = response.data.map(
+          (product) => product.stock.in_stock
+        );
+        console.log(productsInStock);
+        setInStock(productsInStock);
       });
     };
     productFunction();
   }, []);
-
-  const sendEmail = async () => {
-    await customerApi.get("/findById/1").then(async (response) => {
-      await stockApi
-        .post("/sendEmail", { email: response.data.email })
-        .then(() => {
-          console.log("Email enviado!");
-        });
-    });
-  };
 
   return (
     <>
@@ -123,7 +113,7 @@ export default function Landing() {
                     <p className="text-md font-light mt-2 text-white">
                       R$ 08,00 / litro
                     </p>
-                    {inStock === true ? (
+                    {inStock[0] === true ? (
                       <button
                         className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
@@ -137,9 +127,8 @@ export default function Landing() {
                       <button
                         className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={sendEmail}
                       >
-                        Enviar Notificaçōes
+                        Ativar Notificaçōes
                       </button>
                     )}
                   </blockquote>
@@ -169,7 +158,7 @@ export default function Landing() {
                     <p className="text-md font-light mt-2 text-white">
                       R$ 09,00 / kg
                     </p>
-                    {inStock === true ? (
+                    {inStock[1] === true ? (
                       <button
                         className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
@@ -183,9 +172,8 @@ export default function Landing() {
                       <button
                         className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={sendEmail}
                       >
-                        Enviar Notificaçōes
+                        Ativar Notificaçōes
                       </button>
                     )}
                   </blockquote>
@@ -215,7 +203,7 @@ export default function Landing() {
                     <p className="text-md font-light mt-2 text-white">
                       R$ 12,00/ kg
                     </p>
-                    {inStock === true ? (
+                    {inStock[2] === true ? (
                       <button
                         className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
@@ -229,9 +217,8 @@ export default function Landing() {
                       <button
                         className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={sendEmail}
                       >
-                        Enviar Notificaçōes
+                        Ativar Notificaçōes
                       </button>
                     )}
                   </blockquote>
