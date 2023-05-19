@@ -1,6 +1,7 @@
 const stockModel = require("../models/stock.model");
 const productModel = require("../models/product.model");
 const sequelize = require("../../config/db.config");
+const nodemailer = require("nodemailer");
 
 //controller to create new stock
 const createStock = async (req, res) => {
@@ -54,7 +55,50 @@ const manageStock = async (req, res) => {
     });
 };
 
+// controller to send notification email
+const sendEmail = async (req, res) => {
+  // Generate test SMTP service account from ethereal.email
+  // Only needed if you don't have a real mail account for testing
+  //   let testAccount = await nodemailer.createTestAccount();
+
+  // create reusable transporter object using the default SMTP transport
+  let transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: "kane27@ethereal.email", // generated ethereal user
+      pass: "Qvmmsw1sgfTywdTSCx", // generated ethereal password
+    },
+  });
+  console.log(req.body.email);
+  // send mail with defined transport object
+  let info = await transporter
+    .sendMail({
+      from: "kane27@ethereal.email", // sender address
+      to: req.body.email, // list of receivers
+      subject: "Novo Produto no Estoque!", // Subject line
+      text: "Olá, temos novos produtos na loja Hortifruti do Álvaro! Acesse a loja para conferir.", // plain text body
+      html: "<b>Olá, temos novos produtos na loja Hortifruti do Álvaro! </b> Acesse a loja para conferir.</b>", // html body
+    })
+    .then(() => {
+      console.log("Deu certo");
+      res.status(200).send("Email enviado com sucesso!");
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
+
+  //   console.log("Message sent: %s", info.messageId);
+  //   // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+  //   // Preview only available when sending through an Ethereal account
+  //   console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  //   // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+};
+
 module.exports = {
   createStock,
   manageStock,
+  sendEmail,
 };

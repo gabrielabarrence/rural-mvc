@@ -8,3 +8,7 @@ router.post("/createStock", stockController.createStock);
 // Manage stock
 router.post("/manageStock/:id", stockController.manageStock);
 module.exports = router;
+
+// Manage stock
+router.post("/sendEmail", stockController.sendEmail);
+module.exports = router;

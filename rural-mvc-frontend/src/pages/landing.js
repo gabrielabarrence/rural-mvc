@@ -5,8 +5,7 @@ import Link from "next/link";
 
 import Navbar from "components/Navbars/AuthNavbar.js";
 import Footer from "components/Footers/Footer.js";
-import { stockApi, productApi } from "../services/api";
-import { data } from "autoprefixer";
+import { stockApi, productApi, customerApi } from "../services/api";
 
 export default function Landing() {
   const manageStock = (numberId) => {
@@ -32,6 +31,16 @@ export default function Landing() {
     };
     productFunction();
   }, []);
+
+  const sendEmail = async () => {
+    await customerApi.get("/findById/1").then(async (response) => {
+      await stockApi
+        .post("/sendEmail", { email: response.data.email })
+        .then(() => {
+          console.log("Email enviado!");
+        });
+    });
+  };
 
   return (
     <>
@@ -128,9 +137,7 @@ export default function Landing() {
                       <button
                         className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={() => {
-                          window.alert("Enviamos uma notificação por email!");
-                        }}
+                        onClick={sendEmail}
                       >
                         Enviar Notificaçōes
                       </button>
@@ -176,9 +183,7 @@ export default function Landing() {
                       <button
                         className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={() => {
-                          window.alert("Enviamos uma notificação por email!");
-                        }}
+                        onClick={sendEmail}
                       >
                         Enviar Notificaçōes
                       </button>
@@ -224,9 +229,7 @@ export default function Landing() {
                       <button
                         className="bg-blueGray-100 text-black active:bg-blueGray-600 text-sm font-bold uppercase px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mt-5 mr-1 mb-1 ease-linear transition-all duration-150"
                         type="button"
-                        onClick={() => {
-                          window.alert("Enviamos uma notificação por email!");
-                        }}
+                        onClick={sendEmail}
                       >
                         Enviar Notificaçōes
                       </button>
