@@ -1,34 +1,46 @@
 import React from "react";
 import Chart from "chart.js";
+import { analiseDataApi } from "@/services/api";
 
 export default function CardLineChart() {
+  const [chartData, setChartData] = React.useState([]);
+
+  React.useEffect(() => {
+    const getClientsPerMonth = async () => {
+      await analiseDataApi
+        .get("/getClientsPerMonth")
+        .then((res) => {
+          console.log(res.data);
+          setChartData(res.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    getClientsPerMonth();
+  }, []);
+
   React.useEffect(() => {
     var config = {
       type: "line",
       data: {
         labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Maio",
+          "Junho",
+          "Julho",
         ],
         datasets: [
           {
             label: new Date().getFullYear(),
             backgroundColor: "#4c51bf",
             borderColor: "#4c51bf",
-            data: [65, 78, 66, 44, 56, 67, 75],
+            data: chartData,
             fill: false,
-          },
-          {
-            label: new Date().getFullYear() - 1,
-            fill: false,
-            backgroundColor: "#fff",
-            borderColor: "#fff",
-            data: [40, 68, 86, 74, 56, 60, 87],
           },
         ],
       },
@@ -82,6 +94,7 @@ export default function CardLineChart() {
             {
               ticks: {
                 fontColor: "rgba(255,255,255,.7)",
+                beginAtZero: true,
               },
               display: true,
               scaleLabel: {
@@ -105,7 +118,7 @@ export default function CardLineChart() {
     };
     var ctx = document.getElementById("line-chart").getContext("2d");
     window.myLine = new Chart(ctx, config);
-  }, []);
+  }, [chartData]);
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words w-full mb-6 shadow-lg rounded bg-blueGray-700">
@@ -116,7 +129,7 @@ export default function CardLineChart() {
                 Visão Geral
               </h6>
               <h2 className="text-white text-xl font-semibold">
-                Valor das Vendas
+                Usuários Cadastrados por Mês{" "}
               </h2>
             </div>
           </div>

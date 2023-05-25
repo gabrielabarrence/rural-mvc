@@ -1,35 +1,43 @@
 import React from "react";
 import Chart from "chart.js";
+import { analiseDataApi } from "@/services/api";
 
 export default function CardBarChart() {
+  const [chartData, setChartData] = React.useState([]);
+
+  React.useEffect(() => {
+    const analiseProductsByBaseUnit = async () => {
+      await analiseDataApi
+        .get("/getProductsPerBaseUnit")
+        .then((res) => {
+          console.log(res.data);
+          const baseUnit = res.data;
+          setChartData([
+            baseUnit?.kg?.length,
+            baseUnit?.litros?.length,
+            baseUnit?.folhas?.length,
+          ]);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+
+    analiseProductsByBaseUnit();
+  }, []);
+
   React.useEffect(() => {
     let config = {
       type: "bar",
       data: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ],
+        labels: ["Kg", "Litros", "Folhas"],
         datasets: [
           {
-            label: new Date().getFullYear(),
-            backgroundColor: "#ed64a6",
-            borderColor: "#ed64a6",
-            data: [30, 78, 56, 34, 100, 45, 13],
+            label: "Produtos",
+            backgroundColor: ["#ed64a6", "#BDE0FF", "#D1F0E0"],
+            borderColor: ["#ed64a6", "#BDE0FF", "#D1F0E0"],
+            data: chartData,
             fill: false,
-            barThickness: 8,
-          },
-          {
-            label: new Date().getFullYear() - 1,
-            fill: false,
-            backgroundColor: "#4c51bf",
-            borderColor: "#4c51bf",
-            data: [27, 68, 86, 74, 10, 4, 87],
             barThickness: 8,
           },
         ],
@@ -50,6 +58,7 @@ export default function CardBarChart() {
           intersect: true,
         },
         legend: {
+          display: false,
           labels: {
             fontColor: "rgba(0,0,0,.4)",
           },
@@ -62,7 +71,7 @@ export default function CardBarChart() {
               display: false,
               scaleLabel: {
                 display: true,
-                labelString: "Month",
+                labelString: "Unidade de Medida",
               },
               gridLines: {
                 borderDash: [2],
@@ -90,6 +99,9 @@ export default function CardBarChart() {
                 zeroLineBorderDash: [2],
                 zeroLineBorderDashOffset: [2],
               },
+              ticks: {
+                beginAtZero: true,
+              },
             },
           ],
         },
@@ -97,7 +109,8 @@ export default function CardBarChart() {
     };
     let ctx = document.getElementById("bar-chart").getContext("2d");
     window.myBar = new Chart(ctx, config);
-  }, []);
+  }, [chartData]);
+
   return (
     <>
       <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded">
@@ -108,7 +121,7 @@ export default function CardBarChart() {
                 Performance
               </h6>
               <h2 className="text-blueGray-700 text-xl font-semibold">
-                Pedidos Totais
+                Produtos por Categoria
               </h2>
             </div>
           </div>

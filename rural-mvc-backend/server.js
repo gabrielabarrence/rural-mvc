@@ -9,6 +9,7 @@ const product_routes = require("./src/routes/product.routes");
 const sales_routes = require("./src/routes/sales.routes");
 const baseunit_routes = require("./src/routes/baseunit.routes");
 const stock_routes = require("./src/routes/stock.routes");
+const analiseData_routes = require("./src/routes/analiseData.routes");
 
 // create express app
 const app = express();
@@ -31,6 +32,7 @@ app.use("/product", product_routes);
 app.use("/sales", sales_routes);
 app.use("/baseunit", baseunit_routes);
 app.use("/stock", stock_routes);
+app.use("/analiseData", analiseData_routes);
 
 // listen for requests
 app.listen(port, async () => {
