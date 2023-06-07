@@ -1,16 +1,32 @@
 const express = require("express");
-const router = express.Router();
-const customerController = require("../controllers/customer.controller");
-// Retrieve all customers
-router.get("/findAllCustomers", customerController.findAllCustomers);
-// Create a new customer
-router.post("/createCustomer", customerController.createCustomer);
-// Retrieve a single customer with id
-router.get("/findById/:id", customerController.findById);
-// Update a customer with id
-router.put("/updateCustomer", customerController.updateCustomer);
+const CustomerController = require("../controllers/customer.controller");
 
-router.put("/updateCustomerStatus/:id", customerController.setCustomerStatus);
-// Login the customer
-router.post("/loginCustomer", customerController.loginCustomer);
+const router = express.Router();
+const customerController = new CustomerController();
+
+router.get(
+  "/findAllCustomers",
+  customerController.findAllCustomers.bind(customerController)
+);
+router.post(
+  "/createCustomer",
+  customerController.createCustomer.bind(customerController)
+);
+router.get(
+  "/findById/:id",
+  customerController.findById.bind(customerController)
+);
+router.put(
+  "/updateCustomer",
+  customerController.updateCustomer.bind(customerController)
+);
+router.put(
+  "/updateCustomerStatus/:id",
+  customerController.setCustomerStatus.bind(customerController)
+);
+router.post(
+  "/loginCustomer",
+  customerController.loginCustomer.bind(customerController)
+);
+
 module.exports = router;

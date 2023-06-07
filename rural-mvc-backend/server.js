@@ -1,43 +1,44 @@
 require("dotenv").config();
-
 const express = require("express");
-const cors = require("cors");
-const sequelize = require("./config/db.config");
-const customer_routes = require("./src/routes/customer.routes");
-const producer_routes = require("./src/routes/producer.routes");
-const product_routes = require("./src/routes/product.routes");
-const sales_routes = require("./src/routes/sales.routes");
-const baseunit_routes = require("./src/routes/baseunit.routes");
-const stock_routes = require("./src/routes/stock.routes");
-const analiseData_routes = require("./src/routes/analiseData.routes");
 
-// create express app
-const app = express();
+class Server {
+  constructor() {
+    this.app = express();
+    this.port = process.env.PORT || 8080;
 
-// Setup server port
-const port = process.env.PORT || 8080;
+    this.configureMiddlewares();
+    this.configureRoutes();
+    this.startServer();
+  }
 
-//configuring cors
-app.use(cors());
-app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
+  configureMiddlewares() {
+    this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+  }
 
-app.use("/customer", customer_routes);
-app.use("/producer", producer_routes);
-app.use("/product", product_routes);
-app.use("/sales", sales_routes);
-app.use("/baseunit", baseunit_routes);
-app.use("/stock", stock_routes);
-app.use("/analiseData", analiseData_routes);
+  configureRoutes() {
+    const customerRoutes = require("./src/routes/customer.routes");
+    // const producerRoutes = require("./src/routes/producer.routes");
+    // const productRoutes = require("./src/routes/product.routes");
+    // const salesRoutes = require("./src/routes/sales.routes");
+    // const baseunitRoutes = require("./src/routes/baseunit.routes");
+    // const stockRoutes = require("./src/routes/stock.routes");
+    // const analiseDataRoutes = require("./src/routes/analiseData.routes");
 
-// listen for requests
-app.listen(port, async () => {
-  console.log(`Server is listening on port ${port}`);
-  await sequelize.sync();
-});
+    this.app.use("/customer", customerRoutes);
+    // this.app.use("/producer", producerRoutes);
+    // this.app.use("/product", productRoutes);
+    // this.app.use("/sales", salesRoutes);
+    // this.app.use("/baseunit", baseunitRoutes);
+    // this.app.use("/stock", stockRoutes);
+    // this.app.use("/analiseData", analiseDataRoutes);
+  }
 
-module.exports = app;
+  startServer() {
+    this.app.listen(this.port, () => {
+      console.log(`Server is running on port ${this.port}`);
+    });
+  }
+}
+
+new Server();

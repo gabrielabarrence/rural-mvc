@@ -1,133 +1,115 @@
-const customerModel = require("../models/customer.model");
+const CustomerModel = require("../models/customer.model");
 const hashPass = require("../../config/hash");
 
-//controller to find users
-const findAllCustomers = async (req, res) => {
-  await customerModel
-    .findAll({ attributes: ["first_name", "last_name", "email", "is_active"] })
-    .then((results) => {
+class CustomerController {
+  constructor() {
+    this.customerModel = CustomerModel.defineModel();
+  }
+
+  async findAllCustomers(req, res) {
+    try {
+      const results = await this.customerModel.findAll({
+        attributes: ["first_name", "last_name", "email", "is_active"],
+      });
       console.log(results);
       res.status(200).send(results);
-    })
-    .catch((error) => {
+    } catch (error) {
       console.log(error);
       res.status(500).send("Algo deu errado. Tente novamente!");
-    });
-};
+    }
+  }
 
-//controller to create users
-const createCustomer = async (req, res) => {
-  const new_customer = req.body;
-  new_customer.is_active = true;
-  const new_pass = new_customer.password;
-  new_customer.password = await hashPass.encryptPassword(new_pass);
+  async createCustomer(req, res) {
+    try {
+      const new_customer = req.body;
+      new_customer.is_active = true;
+      const new_pass = new_customer.password;
+      new_customer.password = await hashPass.encryptPassword(new_pass);
 
-  await customerModel
-    .create(new_customer, {
-      attributes: ["first_name", "last_name", "email", "password"],
-    })
-    .then(() => {
+      await this.customerModel.create(new_customer, {
+        attributes: ["first_name", "last_name", "email", "password"],
+      });
+
       console.log("Usuário criado com sucesso!");
       res.status(200).send("Usuário criado com sucesso!");
-    })
-    .catch((error) => {
+    } catch (error) {
       console.log(error);
       res.status(500).send("Algo deu errado. Tente novamente!");
-    });
-};
-
-//controller to login user
-const loginCustomer = async (req, res) => {
-  const login_customer = req.body;
-  const customerResult = await customerModel.findOne({
-    where: { email: login_customer.email },
-  });
-  const decrypted_pass = hashPass.decryptPassword(customerResult.password);
-  if (login_customer.password === decrypted_pass) {
-    res.status(200).send("Login realizado com sucesso!");
-  } else {
-    res.status(404).send("Usuário não encontrado. Tente novamente.");
+    }
   }
-};
 
-//controller to find an user by id
-const findById = async (req, res) => {
-  const id_customer = req.params.id;
-  await customerModel
-    .findByPk(id_customer, {
-      attributes: ["first_name", "last_name", "email", "is_active"],
-    })
-    .then((results) => {
-      console.log(results);
-      res.status(200).send(results);
-    })
-    .catch((error) => {
+  async loginCustomer(req, res) {
+    try {
+      const login_customer = req.body;
+      const customerResult = await this.customerModel.findOne({
+        where: { email: login_customer.email },
+      });
+      const decrypted_pass = hashPass.decryptPassword(customerResult.password);
+      if (login_customer.password === decrypted_pass) {
+        res.status(200).send("Login realizado com sucesso!");
+      } else {
+        res.status(404).send("Usuário não encontrado. Tente novamente.");
+      }
+    } catch (error) {
       console.log(error);
       res.status(500).send("Algo deu errado. Tente novamente!");
-    });
-};
+    }
+  }
 
-//controller to update user
-const updateCustomer = async (req, res) => {
-  const update_customer = req.body;
-  await customerModel
-    .update(update_customer, {
-      where: { id_customer: update_customer.id },
-    })
-    .then((results) => {
+  async findById(req, res) {
+    try {
+      const id_customer = req.params.id;
+      const results = await this.customerModel.findByPk(id_customer, {
+        attributes: ["first_name", "last_name", "email", "is_active"],
+      });
       console.log(results);
       res.status(200).send(results);
-    })
-    .catch((error) => {
+    } catch (error) {
       console.log(error);
       res.status(500).send("Algo deu errado. Tente novamente!");
-    });
-};
+    }
+  }
 
-const setCustomerStatus = async (req, res) => {
-  const id_customer = req.params.id;
-  const customer_data = await customerModel.findByPk(id_customer);
+  async updateCustomer(req, res) {
+    try {
+      const update_customer = req.body;
+      const results = await this.customerModel.update(update_customer, {
+        where: { id_customer: update_customer.id },
+      });
+      console.log(results);
+      res.status(200).send(results);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Algo deu errado. Tente novamente!");
+    }
+  }
 
-  if (customer_data.is_active) {
-    await customerModel
-      .update(
-        { is_active: false },
+  async setCustomerStatus(req, res) {
+    try {
+      const id_customer = req.params.id;
+      const customer_data = await this.customerModel.findByPk(id_customer);
+
+      let updatedStatus;
+      if (customer_data.is_active) {
+        updatedStatus = false;
+      } else {
+        updatedStatus = true;
+      }
+
+      const results = await this.customerModel.update(
+        { is_active: updatedStatus },
         {
           where: { id_customer: id_customer },
         }
-      )
-      .then((results) => {
-        console.log(results);
-        res.status(200).send(results);
-      })
-      .catch((error) => {
-        console.log(error);
-        res.status(500).send("Algo deu errado. Tente novamente!");
-      });
-  } else {
-    await customerModel
-      .update(
-        { is_active: true },
-        {
-          where: { id_customer: id_customer },
-        }
-      )
-      .then((results) => {
-        console.log(results);
-        res.status(200).send(results);
-      })
-      .catch((error) => {
-        console.log(error);
-        res.status(500).send("Algo deu errado. Tente novamente!");
-      });
-  }
-};
+      );
 
-module.exports = {
-  findAllCustomers,
-  createCustomer,
-  findById,
-  updateCustomer,
-  loginCustomer,
-  setCustomerStatus,
-};
+      console.log(results);
+      res.status(200).send(results);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send("Algo deu errado. Tente novamente!");
+    }
+  }
+}
+
+module.exports = CustomerController;
